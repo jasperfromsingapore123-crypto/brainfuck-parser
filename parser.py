@@ -5,7 +5,7 @@ with open ("brainfix.py","r") as file:
 print("Starting to parse. Saving results in parsed.txt")
 
 parsed = open("parsed.txt", "w")
-
+converted = open("converted.py", "w")
 length = len(brainfix)
 
 counter = 0
@@ -25,7 +25,7 @@ while i<length:
 		parsed.write("Ended loop \n")
 		parsed.write("\n")
 		counter = 0
-		indent_amount = 0
+		indent_amount -= 4
 
 
 	if i+1 == length or curr_symbol != brainfix[i+1]:
@@ -65,37 +65,38 @@ memory = [0] * 30000
 
 i = 0
 j = 0
-parsed.write("i = 0 \n")
+converted.write("j = 0 \n")
 
 indent_amount = 0
-parsed.write("memory = [0] * 30000\n")
+converted.write("memory = [0] * 30000\n")
 while i < length:
 	if brainfix[i] == "[":
-		parsed.write(f"while memory[{j}] != 0:\n")
+		converted.write(" "*indent_amount)
+		converted.write(f"while memory[j] != 0:\n")
 		indent_amount += 4
 	elif brainfix[i] == "]":
 		indent_amount -= 4
 	elif brainfix[i] == ">":
-		j += 1
+		converted.write(" " * indent_amount + "j += 1\n")
 	elif brainfix[i] == "<":
-		j -= 1
+		converted.write(" " * indent_amount + "j -= 1\n")
 	elif brainfix[i] == ",":
-		parsed.write(" "*indent_amount)
-		parsed.write("x = int(input())\n")
-		parsed.write(f"memory[{j}] = x\n")
+		converted.write(" "*indent_amount)
+		converted.write(f"memory[j] = ord(input()[0])\n")
 	elif brainfix[i] == ".":
-		parsed.write(" "*indent_amount)
-		parsed.write(f"print(memory[{j}])")
+		converted.write(" "*indent_amount)
+		converted.write('print(chr(memory[j]), end="")\n')
 	elif brainfix[i] == "+":
-		parsed.write(" "*indent_amount)
-		parsed.write(f"memory[{j}] += 1\n")
+		converted.write(" "*indent_amount)
+		converted.write(f"memory[j] = (memory[j]+1)%256\n")
 	elif brainfix[i] == "-":
-		parsed.write(" "*indent_amount)
-		parsed.write(f"memory[{j}] -= 1\n")
+		converted.write(" "*indent_amount)
+		converted.write(f"memory[j] = (memory[j]-1)%256\n")
 	i += 1
 
 
 parsed.close()
+converted.close()
 print("Finish parsing.")
 
 
