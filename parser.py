@@ -1,4 +1,20 @@
 #brainfuck parser for brain rotted people like me
+def print_operators(counter):
+    global currently_doing_operators, add, minus
+    if currently_doing_operators:
+        if add:
+            converted.write(" " * indent_amount)
+            converted.write(f"memory[j] = (memory[j]+{counter})%256\n")
+
+        elif minus:
+            converted.write(" " * indent_amount)
+            converted.write(f"memory[j] = (memory[j]-{counter})%256\n")
+
+        currently_doing_operators = False
+        add = False
+        minus = False
+
+
 with open ("brainfix.py","r") as file:
 	brainfix = file.read()
 
@@ -69,6 +85,12 @@ converted.write("j = 0 \n")
 
 indent_amount = 0
 converted.write("memory = [0] * 30000\n")
+counter = 0 
+
+currently_doing_operators = False
+add = False
+minus = False
+
 while i < length:
 	if brainfix[i] == "[":
 		converted.write(" "*indent_amount)
@@ -87,11 +109,22 @@ while i < length:
 		converted.write(" "*indent_amount)
 		converted.write('print(chr(memory[j]), end="")\n')
 	elif brainfix[i] == "+":
-		converted.write(" "*indent_amount)
-		converted.write(f"memory[j] = (memory[j]+1)%256\n")
+		currently_doing_operators = True
+		add = True
+		minus = False
+		counter += 1
+		# converted.write(f"memory[j] = (memory[j]+1)%256\n")
 	elif brainfix[i] == "-":
-		converted.write(" "*indent_amount)
-		converted.write(f"memory[j] = (memory[j]-1)%256\n")
+		currently_doing_operators = True
+		minus = True
+		add = False
+		counter += 1
+		# converted.write(f"memory[j] = (memory[j]-1)%256\n")
+
+	if brainfix[i] in "+-":
+		if i + 1 == length or brainfix[i] != brainfix[i + 1]:
+			print_operators(counter)
+			counter = 0
 	i += 1
 
 
