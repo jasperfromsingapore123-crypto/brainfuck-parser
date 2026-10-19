@@ -1,4 +1,4 @@
-#brainfuck parser for brain rotted people
+#brainfuck parser for brain rotted people like me
 with open ("brainfix.py","r") as file:
 	brainfix = file.read()
 
